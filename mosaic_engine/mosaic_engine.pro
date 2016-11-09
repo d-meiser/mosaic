@@ -25,7 +25,8 @@ SOURCES = \
     interactionhelpers.cpp \
     badnesscomposite.cpp \
     mosaicupdateoptimize.cpp \
-    imageutilities.cpp
+    imageutilities.cpp \
+    mosaictargetcorrelation.cpp
 HEADERS = \
     maindriver.h \
     mosaicview.h \
@@ -51,7 +52,8 @@ HEADERS = \
     interactionhelpers.h \
     badnesscomposite.h \
     mosaicupdateoptimize.h \
-    imageutilities.h
+    imageutilities.h \
+    mosaictargetcorrelation.h
 
 DISTFILES +=
 

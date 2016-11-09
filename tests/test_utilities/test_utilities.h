@@ -2,12 +2,13 @@
 #define TEST_UTILITIES_H
 
 #include <QImage>
+#include <QOpenGLDebugLogger>
+
 
 QImage createImage(int width, int height);
 QImage createImageRandomSize();
 
 // L2 difference between images
-float distanceBetweenImages(const QImage& image1, const QImage& image2);
 float distanceBetweenImages(const QString& masterFileName,
                             const QImage& image1);
 
@@ -34,5 +35,23 @@ bool imagesEqual(const QImage& masterImage,
                  const QImage& image,
                  float tolerance,
                  const QString& fileName);
+
+
+struct DebugMessageHandler : public QObject {
+    Q_OBJECT
+public:
+    virtual ~DebugMessageHandler() {}
+    DebugMessageHandler(QObject* parent = 0) : QObject(parent) {}
+    void connectToLogger(QOpenGLDebugLogger* logger) {
+        connect(logger, &QOpenGLDebugLogger::messageLogged,
+                this, &DebugMessageHandler::handleMessage);
+    }
+
+public slots:
+    void handleMessage(const QOpenGLDebugMessage& debugMessage) {
+        qDebug() << debugMessage;
+    }
+};
+
 
 #endif // TEST_UTILITIES_H

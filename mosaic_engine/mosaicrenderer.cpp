@@ -50,13 +50,16 @@ void MoMosaicRenderer::render() {
     }
     ++i;
 
-    glClearColor(0.0f, 0.0f, 0.0f, 0.3f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     MO_CHECK_GL_ERROR;
 
     glEnable(GL_DEPTH_TEST);
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
+    MO_CHECK_GL_ERROR;
+
+    if (model_.size() == 0) return;
 
     if (showTargetImage_) {
         renderTargetImage();
@@ -96,6 +99,7 @@ void MoMosaicRenderer::renderMosaicTiles() {
 
     widthBuffer_.bind();
     float* widths = (float*)widthBuffer_.map(QOpenGLBuffer::WriteOnly);
+    MO_CHECK_GL_ERROR;
     model_.getWidths(widths);
     widthBuffer_.unmap();
     widthBuffer_.release();
@@ -103,6 +107,7 @@ void MoMosaicRenderer::renderMosaicTiles() {
 
     heightBuffer_.bind();
     float* heights = (float*)heightBuffer_.map(QOpenGLBuffer::WriteOnly);
+    MO_CHECK_GL_ERROR;
     model_.getHeights(heights);
     heightBuffer_.unmap();
     heightBuffer_.release();
@@ -137,6 +142,15 @@ void MoMosaicRenderer::renderMosaicTiles() {
     vao_.release();
     program_->release();
     MO_CHECK_GL_ERROR;
+
+    if (tileTextures_.isBound()) {
+        tileTextures_.release();
+        MO_CHECK_GL_ERROR;
+    }
+    if (targetImage_.isBound()) {
+        targetImage_.release();
+        MO_CHECK_GL_ERROR;
+    }
 
     if (window_) {
         window_->resetOpenGLState();
